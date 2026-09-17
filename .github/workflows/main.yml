@@ -1,23 +1,15 @@
-name: Update Chesapeake Lunch Menu
+name: Chesapeake Lunch
 
 on:
-  workflow_dispatch:
+workflow_dispatch:
 
 jobs:
-  update-menu:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Install requests
-        run: pip install requests
-
-      - name: Get today's menu
-        run: python menu.py
+menu:
+runs-on: ubuntu-latest
+steps:
+- uses: actions/checkout@v4
+- uses: actions/setup-python@v5
+with:
+python-version: "3.12"
+- run: pip install requests
+- run: python menu.py
