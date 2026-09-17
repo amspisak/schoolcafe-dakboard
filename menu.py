@@ -99,8 +99,11 @@ import json
 menu_data = {
     "school": "Butts Road Intermediate",
     "date": date_display,
-    "items": items,
-    "items_text": "\n".join(f"• {item}" for item in items)
+    "item1": items[0] if len(items) > 0 else "",
+    "item2": items[1] if len(items) > 1 else "",
+    "item3": items[2] if len(items) > 2 else "",
+    "item4": items[3] if len(items) > 3 else "",
+    "item5": items[4] if len(items) > 4 else ""
 }
 
 with open("menu.json", "w", encoding="utf-8") as f:
