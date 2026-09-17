@@ -1,23 +1,34 @@
 name: Update Chesapeake Lunch Menu
 
 on:
-  workflow_dispatch:
+workflow_dispatch:
+
+permissions:
+contents: write
 
 jobs:
-  update-menu:
-    runs-on: ubuntu-latest
+update-menu:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+steps:
+- name: Check out repository
+uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
+- name: Set up Python
+uses: actions/setup-python@v5
+with:
+python-version: "3.x"
 
-      - name: Install requests
-        run: pip install requests
+- name: Install requests
+run: pip install requests
 
-      - name: Get today's menu
-        run: python menu.py
+- name: Get today's menu
+run: python menu.py
+
+- name: Commit menu page
+run: |
+git config --global user.name "github-actions"
+git config --global user.email "github-actions@github.com"
+git add index.html
+git diff --cached --quiet || git commit -m "Update lunch menu"
+git push
