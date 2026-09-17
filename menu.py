@@ -8,47 +8,45 @@ today = datetime.now().strftime("%m-%d-%Y")
 url = "https://webapis.schoolcafe.com/api/CalendarView/GetDailyMenuitems"
 
 params = {
-"SchoolId": SCHOOL_ID,
-"ServingDate": today,
-"ServingLine": "Main Line",
-"MealType": "Lunch",
-"compressImages": "false"
+    "SchoolId": SCHOOL_ID,
+    "ServingDate": today,
+    "ServingLine": "Main Line",
+    "MealType": "Lunch",
+    "compressImages": "false"
 }
 
 headers = {
-"User-Agent": "Mozilla/5.0",
-"Accept": "application/json, text/plain, */*",
-"Referer": "https://www.schoolcafe.com/"
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "application/json, text/plain, */*",
+    "Referer": "https://www.schoolcafe.com/"
 }
 
 response = requests.get(
-url,
-params=params,
-headers=headers,
-timeout=30
+    url,
+    params=params,
+    headers=headers,
+    timeout=30
 )
 
 response.raise_for_status()
 data = response.json()
 
-# Find menu item descriptions
 items = []
 
 def find_items(obj):
-if isinstance(obj, dict):
-for key, value in obj.items():
-if key.lower() in ["menuitemdescription", "description"]:
-if isinstance(value, str) and value.strip():
-items.append(value.strip())
-else:
-find_items(value)
-elif isinstance(obj, list):
-for item in obj:
-find_items(item)
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if key.lower() in ["menuitemdescription", "description"]:
+                if isinstance(value, str) and value.strip():
+                    items.append(value.strip())
+            else:
+                find_items(value)
+    elif isinstance(obj, list):
+        for item in obj:
+            find_items(item)
 
 find_items(data)
 
-# Remove duplicates while preserving order
 items = list(dict.fromkeys(items))
 
 date_display = datetime.now().strftime("%A, %B %-d, %Y")
@@ -61,19 +59,19 @@ html = f"""<!DOCTYPE html>
 <title>Butts Road Intermediate Lunch</title>
 <style>
 body {{
-font-family: Arial, sans-serif;
-margin: 30px;
+    font-family: Arial, sans-serif;
+    margin: 30px;
 }}
 h1 {{
-margin-bottom: 5px;
+    margin-bottom: 5px;
 }}
 h2 {{
-margin-top: 0;
-font-weight: normal;
+    margin-top: 0;
+    font-weight: normal;
 }}
 li {{
-font-size: 24px;
-margin: 12px 0;
+    font-size: 24px;
+    margin: 12px 0;
 }}
 </style>
 </head>
@@ -84,7 +82,7 @@ margin: 12px 0;
 """
 
 for item in items:
-html += f"<li>{item}</li>\n"
+    html += f"<li>{item}</li>\n"
 
 html += """
 </ul>
@@ -93,7 +91,7 @@ html += """
 """
 
 with open("index.html", "w", encoding="utf-8") as f:
-f.write(html)
+    f.write(html)
 
 print("Created index.html")
 print("\n".join(items))
