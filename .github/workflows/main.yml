@@ -3,7 +3,7 @@ name: Update Chesapeake Lunch Menu
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 14 * * 1-5"
+    - cron: "0 06 * * 1-5"
 
 permissions:
   contents: write
