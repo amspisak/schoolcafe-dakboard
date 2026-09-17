@@ -35,12 +35,14 @@ items = []
 
 def find_items(obj):
     if isinstance(obj, dict):
-        for key, value in obj.items():
-            if key.lower() in ["menuitemdescription", "description"]:
-                if isinstance(value, str) and value.strip():
-                    items.append(value.strip())
-            else:
+        if obj.get("Category") == "ENTREES":
+            description = obj.get("MenuItemDescription")
+            if isinstance(description, str) and description.strip():
+                items.append(description.strip())
+        else:
+            for value in obj.values():
                 find_items(value)
+
     elif isinstance(obj, list):
         for item in obj:
             find_items(item)
