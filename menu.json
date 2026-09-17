@@ -1,10 +1,9 @@
 {
   "school": "Butts Road Intermediate",
   "date": "Thursday, September 17, 2026",
-  "items": [
-    "Beef & Cheese Burritos",
-    "Chicken Salad Croissant",
-    "Corn Dog Nuggets"
-  ],
-  "items_text": "\u2022 Beef & Cheese Burritos\n\u2022 Chicken Salad Croissant\n\u2022 Corn Dog Nuggets"
+  "item1": "Beef & Cheese Burritos",
+  "item2": "Chicken Salad Croissant",
+  "item3": "Corn Dog Nuggets",
+  "item4": "",
+  "item5": ""
 }
