@@ -1,25 +1,39 @@
-name: Update Chesapeake Lunch Menu
+import requests
+from datetime import datetime
 
-on:
-schedule:
-- cron: "0 15 * * 1-5"
-workflow_dispatch:
+SCHOOL_ID = "d9edb69f-dc06-41a4-8d8d-15c3e47d812f"
 
-jobs:
-update-menu:
-runs-on: ubuntu-latest
+today = datetime.now().strftime("%m-%d-%Y")
 
-steps:
-- name: Check out repository
-uses: actions/checkout@v4
+url = "https://webapis.schoolcafe.com/api/CalendarView/GetDailyMenuitems"
 
-- name: Set up Python
-uses: actions/setup-python@v5
-with:
-python-version: "3.x"
+params = {
+    "SchoolId": SCHOOL_ID,
+    "ServingDate": today,
+    "ServingLine": "Main Line",
+    "MealType": "Lunch",
+    "compressImages": "false"
+}
 
-- name: Install requests
-run: pip install requests
+headers = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "application/json, text/plain, */*",
+    "Referer": "https://www.schoolcafe.com/"
+}
 
-- name: Get today's menu
-run: python menu.py
+response = requests.get(
+    url,
+    params=params,
+    headers=headers,
+    timeout=30
+)
+
+print("Status:", response.status_code)
+print("URL:", response.url)
+print("Response:", response.text)
+
+response.raise_for_status()
+
+data = response.json()
+
+print(data)
