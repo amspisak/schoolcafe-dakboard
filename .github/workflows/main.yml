@@ -3,6 +3,9 @@ name: Update Chesapeake Lunch Menu
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-menu:
     runs-on: ubuntu-latest
@@ -21,3 +24,11 @@ jobs:
 
       - name: Get today's menu
         run: python menu.py
+
+      - name: Save updated menu
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Update lunch menu"
+          git push
