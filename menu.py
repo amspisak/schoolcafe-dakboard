@@ -1,19 +1,10 @@
 import requests
-from datetime import datetime
+import json
+from datetime import datetime, timedelta
 
 SCHOOL_ID = "d9edb69f-dc06-41a4-8d8d-15c3e47d812f"
 
-today = datetime.now().strftime("%m-%d-%Y")
-
 url = "https://webapis.schoolcafe.com/api/CalendarView/GetDailyMenuitems"
-
-params = {
-    "SchoolId": SCHOOL_ID,
-    "ServingDate": today,
-    "ServingLine": "Main Line",
-    "MealType": "Lunch",
-    "compressImages": "false"
-}
 
 headers = {
     "User-Agent": "Mozilla/5.0",
@@ -21,94 +12,87 @@ headers = {
     "Referer": "https://www.schoolcafe.com/"
 }
 
-response = requests.get(
-    url,
-    params=params,
-    headers=headers,
-    timeout=30
-)
 
-response.raise_for_status()
-data = response.json()
+def get_entrees(date):
+    params = {
+        "SchoolId": SCHOOL_ID,
+        "ServingDate": date.strftime("%m-%d-%Y"),
+        "ServingLine": "Main Line",
+        "MealType": "Lunch",
+        "compressImages": "false"
+    }
 
-items = []
+    response = requests.get(
+        url,
+        params=params,
+        headers=headers,
+        timeout=30
+    )
 
-def find_items(obj):
-    if isinstance(obj, dict):
-        if obj.get("Category") == "ENTREES":
-            description = obj.get("MenuItemDescription")
-            if isinstance(description, str) and description.strip():
-                items.append(description.strip())
-        else:
-            for value in obj.values():
-                find_items(value)
+    response.raise_for_status()
+    data = response.json()
 
-    elif isinstance(obj, list):
-        for item in obj:
-            find_items(item)
+    items = []
 
-find_items(data)
+    def find_entrees(obj):
+        if isinstance(obj, dict):
+            if obj.get("Category") == "ENTREES":
+                description = obj.get("MenuItemDescription")
+                if isinstance(description, str) and description.strip():
+                    items.append(description.strip())
+            else:
+                for value in obj.values():
+                    find_entrees(value)
 
-items = list(dict.fromkeys(items))
+        elif isinstance(obj, list):
+            for item in obj:
+                find_entrees(item)
 
-date_display = datetime.now().strftime("%A, %B %-d, %Y")
+    find_entrees(data)
 
-html = f"""<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="3600">
-<title>Butts Road Intermediate Lunch</title>
-<style>
-body {{
-    font-family: Arial, sans-serif;
-    margin: 30px;
-}}
-h1 {{
-    margin-bottom: 5px;
-}}
-h2 {{
-    margin-top: 0;
-    font-weight: normal;
-}}
-li {{
-    font-size: 24px;
-    margin: 12px 0;
-}}
-</style>
-</head>
-<body>
-<h1>Butts Road Intermediate</h1>
-<h2>Lunch — {date_display}</h2>
-<ul>
-"""
+    return list(dict.fromkeys(items))
 
-for item in items:
-    html += f"<li>{item}</li>\n"
 
-html += """
-</ul>
-</body>
-</html>
-"""
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html)
+today = datetime.now()
+tomorrow = today + timedelta(days=1)
 
-import json
+today_items = get_entrees(today)
+tomorrow_items = get_entrees(tomorrow)
+
+today_display = today.strftime("%A, %B %-d")
+tomorrow_display = tomorrow.strftime("%A, %B %-d")
+
 
 menu_data = {
     "school": "Butts Road Intermediate",
-    "date": date_display,
-    "item1": items[0] if len(items) > 0 else "",
-    "item2": items[1] if len(items) > 1 else "",
-    "item3": items[2] if len(items) > 2 else "",
-    "item4": items[3] if len(items) > 3 else "",
-    "item5": items[4] if len(items) > 4 else ""
+
+    "today": today_display,
+    "today_item1": today_items[0] if len(today_items) > 0 else "",
+    "today_item2": today_items[1] if len(today_items) > 1 else "",
+    "today_item3": today_items[2] if len(today_items) > 2 else "",
+    "today_item4": today_items[3] if len(today_items) > 3 else "",
+    "today_item5": today_items[4] if len(today_items) > 4 else "",
+
+    "tomorrow": tomorrow_display,
+    "tomorrow_item1": tomorrow_items[0] if len(tomorrow_items) > 0 else "",
+    "tomorrow_item2": tomorrow_items[1] if len(tomorrow_items) > 1 else "",
+    "tomorrow_item3": tomorrow_items[2] if len(tomorrow_items) > 2 else "",
+    "tomorrow_item4": tomorrow_items[3] if len(tomorrow_items) > 3 else "",
+    "tomorrow_item5": tomorrow_items[4] if len(tomorrow_items) > 4 else ""
 }
+
 
 with open("menu.json", "w", encoding="utf-8") as f:
     json.dump(menu_data, f, indent=2)
 
-print("Created index.html")
+
 print("Created menu.json")
-print("\n".join(items))
+print()
+print(today_display)
+for item in today_items:
+    print(item)
+
+print()
+print(tomorrow_display)
+for item in tomorrow_items:
+    print(item)
