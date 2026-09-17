@@ -106,4 +106,4 @@ with open("menu.json", "w", encoding="utf-8") as f:
 
 print("Created index.html")
 print("Created menu.json")
-print("\n".join(items))
+print(data)
