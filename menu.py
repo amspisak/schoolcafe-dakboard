@@ -100,7 +100,6 @@ menu_data = {
     "items": items,
     "items_text": "\n".join(f"• {item}" for item in items)
 }
-}
 
 with open("menu.json", "w", encoding="utf-8") as f:
     json.dump(menu_data, f, indent=2)
