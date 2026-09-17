@@ -89,9 +89,20 @@ html += """
 </body>
 </html>
 """
-
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html)
 
+import json
+
+menu_data = {
+    "school": "Butts Road Intermediate",
+    "date": date_display,
+    "items": items
+}
+
+with open("menu.json", "w", encoding="utf-8") as f:
+    json.dump(menu_data, f, indent=2)
+
 print("Created index.html")
+print("Created menu.json")
 print("\n".join(items))
