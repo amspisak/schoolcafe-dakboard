@@ -98,7 +98,7 @@ menu_data = {
     "school": "Butts Road Intermediate",
     "date": date_display,
     "items": items,
-    "items_text": "\n".join(f"• {item}" for item in items)
+    "items_text": " • ".join(items)
 }
 
 with open("menu.json", "w", encoding="utf-8") as f:
