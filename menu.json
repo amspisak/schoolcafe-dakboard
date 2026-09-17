@@ -1,9 +1,15 @@
 {
   "school": "Butts Road Intermediate",
-  "date": "Thursday, September 17, 2026",
-  "item1": "Beef & Cheese Burritos",
-  "item2": "Chicken Salad Croissant",
-  "item3": "Corn Dog Nuggets",
-  "item4": "",
-  "item5": ""
+  "today": "Thursday, September 17",
+  "today_item1": "Beef & Cheese Burritos",
+  "today_item2": "Chicken Salad Croissant",
+  "today_item3": "Corn Dog Nuggets",
+  "today_item4": "",
+  "today_item5": "",
+  "tomorrow": "Friday, September 18",
+  "tomorrow_item1": "Herb Roasted Chicken Drumsticks",
+  "tomorrow_item2": "Spicy Fish Sticks",
+  "tomorrow_item3": "Uncrustable, Grape",
+  "tomorrow_item4": "Uncrustable, Strawberry",
+  "tomorrow_item5": ""
 }
