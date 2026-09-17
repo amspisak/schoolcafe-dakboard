@@ -21,8 +21,3 @@ run: pip install requests
 
 - name: Get today's menu
 run: python menu.py
-
-- name: Show generated page
-run: |
-ls -la
-cat index.html
